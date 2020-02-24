@@ -25,7 +25,7 @@ def remove_dir(path:str):
 def read(path:str):
     with open(clean_path(path), 'r') as file:
         try:
-            data = file.read(data)
+            data = file.read()
         except:
             log.error('Failed to read from {0}'.format(path))
             return None
