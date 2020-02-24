@@ -1,4 +1,6 @@
-import gzip, bz2, ZipFile, tarfile
+from typing import List
+import gzip, bz2, tarfile
+from zipfile import ZipFile
 
 def compress_gzip(data, out_path:str):
     with gzip.open(out_path,'wb') as f:
@@ -25,7 +27,7 @@ def compress_bz2(data, out_path:str):
             f.write(data)
         except:
             return False
-        finally
+        finally:
             return True
 
 def decompress_bz2(in_path:str):
@@ -44,7 +46,7 @@ def compress_zip(data, out_path:str):
             f.write(data)
         except:
             return False
-        finally
+        finally:
             return True
 
 def decompress_zip(in_path:str):
@@ -73,14 +75,14 @@ def tar_bz2(files:List[str],out_path:str):
             f.add(file)
 
 def untar(in_path:str):
-    with tarfile.open(in_file,'r') as f:
+    with tarfile.open(in_path,'r') as f:
         f.extractall()
 
 def untar_gz(in_path:str):
-    with tarfile.open(in_file,'r:gz') as f:
+    with tarfile.open(in_path,'r:gz') as f:
         f.extractall()
 
 def untar_bz2(in_path:str):
-    with tarfile.open(in_file,'r:bz2') as f:
+    with tarfile.open(in_path,'r:bz2') as f:
         f.extractall()
 
