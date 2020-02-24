@@ -105,7 +105,7 @@ def get_mem_gpu():
 
 def get_config_int():
     result = _execute_command('get_config int').splitlines()
-    return { i.split('=')[0] : int(i.split('=')[1]) for i in result }
+    return { i.split('=')[0] : int(i.split('=')[1], 0) for i in result }
 
 def get_config_str():
     result = _execute_command('get_config int').splitlines()
@@ -158,23 +158,22 @@ def get_camera_enabled():
     return bool(get_camera()['enabled'])
 
 def get_throttled():
-    return int(_execute_command('get_throttled'))
+    return int(_execute_command('get_throttled').strip().split('=')[1], 0)
 
-def get_throttled_arm_freq_capped():
-    return get_throttled & (1 >> 1)
+def get_throttled_is_arm_freq_capped():
+    return bool(get_throttled() & (1 >> 1))
 
-def get_throttled_arm_freq_capped_occurred():
-    return get_throttled & (1 >> 17)
+def get_throttled_is_throttled():
+    return bool(get_throttled() & (1 >> 2))
 
-def get_throttled_currently_throttled():
-    return get_throttled & (1 >> 2)
+def get_throttled__is_under_voltage():
+    return bool(get_throttled() & (1 >> 0))
 
-def get_throttled_under_voltage():
-    return get_throttled & (1 >> 0)
+def get_throttled_was_arm_freq_capped():
+    return bool(get_throttled() & (1 >> 17))
 
-def get_throttled_under_voltage_occurred():
-    return get_throttled & (1 >> 16)
+def get_throttled_was_throttled():
+    return bool(get_throttled() & (1 >> 18))
 
-def get_throttled_has_occurred():
-    return get_throttled & (1 >> 18)
-
+def get_throttled_was_under_voltage():
+    return bool(get_throttled() & (1 >> 16))
