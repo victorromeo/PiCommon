@@ -6,12 +6,12 @@ def kill(pid:int):
     os.kill(pid, signal.SIGSTOP)
     log.info('Kill process {0}'.format(pid))
 
-def wait(pid:int):
+def sleep(pid:int):
     """Tell a process to sleep"""
     os.waitpid(pid, os.WSTOPPED)
     log.info('Wait process {0}'.format(pid))
 
-def continue(pid:int):
+def wake(pid:int):
     """Continue a stopped process"""
     os.kill(pid, signal.SIGCONT)
     log.info('Continue process {0}'.format(pid))
@@ -30,4 +30,4 @@ def fork():
 
 def sid():
     """Return Session ID"""
-    return sid = os.getsid(pid) 
+    return os.getsid(pid) 
