@@ -1,7 +1,24 @@
 import subprocess
 
-def _execute_command(cmd):
-    return subprocess.check_output(['/opt/vc/bin/vcgencmd',cmd]).decode('utf-8')
+_debug = False
+def set_debug(enable:bool = True):
+    global _debug
+    _debug = enable
+
+def _execute_command(cmd, arg=None):
+    if _debug:
+        print(f'vcgencmd {cmd} {arg}')
+
+    if arg is None:
+        result = subprocess.check_output(['/opt/vc/bin/vcgencmd',cmd]).decode('utf-8')
+    else:    
+        result = subprocess.check_output(['/opt/vc/bin/vcgencmd',cmd, arg]).decode('utf-8')
+
+    if _debug:
+        print(result)
+    
+    return result
+
 
 def measure_clock(src):
     result = _execute_command(f'measure_clock {src}').strip()
@@ -119,12 +136,12 @@ def otp_dump():
     return { i.split(':')[0]: i.split(':')[1] for i in result }
 
 def display_power(src:int, enable:bool):    
-    result = _execute_command(f'display_power {src} {int(enable)}').strip()
-    return int(result[result.find(':') +1:].strip())
+    result = _execute_command(f'display_power {int(enable)} {src}').strip()
+    return bool(int(result[result.find('=') +1:]))
 
 def get_display_power():
     result = _execute_command(f'display_power').strip()
-    return int(result[result.find(':') +1:].strip())
+    return bool(int(result[result.find('=') +1:]))
 
 def set_display_power_main_lcd(enable:bool):
     return display_power(0,enable)
@@ -149,13 +166,13 @@ def mem_oom():
 
 def get_camera():
     result = _execute_command('get_camera').split(' ')
-    return { i.split('=')[0]: int(i.split(':')[1]) for i in result }
+    return { i.split('=')[0]: bool(int(i.split('=')[1])) for i in result }
 
 def get_camera_supported():
-    return bool(get_camera()['supported'])
+    return get_camera()['supported']
 
 def get_camera_enabled():
-    return bool(get_camera()['enabled'])
+    return get_camera()['enabled']
 
 def get_throttled():
     return int(_execute_command('get_throttled').strip().split('=')[1], 0)
