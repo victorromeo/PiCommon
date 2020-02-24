@@ -1,13 +1,16 @@
 import json
 
-class Config:
+class Config():
     def __init__(self, config_path:str = None):
         self.config_path = config_path
         self.config = {}
+        self.sort_keys = True
+        self.indent = True
+        
         if config_path is not None:
             self.ReadFromFile(self.config_path)
 
-    def ReadFromFile(path:str):
+    def ReadFromFile(self, path:str):
         with open(path, 'r') as file:
             data = file.read()
             self.Read(data)
@@ -19,7 +22,7 @@ class Config:
         with open(path, 'w') as file:
             file.write(self.Write())
 
-    def Write():
+    def Write(self):
         return json.dump(self, self.config)
 
     def Add(self, key:str, value):
@@ -28,6 +31,6 @@ class Config:
     def Remove(self, key:str):
         self.config.pop(key)
 
-    def Get():
+    def Get(self):
         return json.dumps(self.config, sort_keys = self.sort_keys, indent = self.indent)
  
